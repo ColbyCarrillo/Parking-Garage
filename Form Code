@@ -1,0 +1,90 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ParkingGarageDeux2
+{
+    public partial class Form1 : Form
+    {
+        PGCalcs pg = new PGCalcs();
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void DisableFeeInput()
+        {
+            btnSetFees.Enabled = false;
+            txtSetMin.Enabled = false;
+            txtSetMax.Enabled = false;
+            txtSetAddit.Enabled = false;
+        }
+        private void EnableFeeInput()
+        {
+            btnSetFees.Enabled = true;
+            txtSetMin.Enabled = true;
+            txtSetMax.Enabled = true;
+            txtSetAddit.Enabled = true;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            lstDayOfWeek.Items.Add("Monday");
+            lstDayOfWeek.Items.Add("Tuesday");
+            lstDayOfWeek.Items.Add("Wednesday");
+            lstDayOfWeek.Items.Add("Thursday");
+            lstDayOfWeek.Items.Add("Friday");
+            lstDayOfWeek.Items.Add("Saturday");
+            lstDayOfWeek.Items.Add("Sunday");
+        }
+
+        private void dateTimeStart_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dateTimeEnd_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {            
+            pg.StartTime = dateTimeStart.Value;
+            pg.EndTime = dateTimeEnd.Value;
+
+
+            pg.AddFee(pg.StartTime, pg.EndTime);
+
+            dateTimeStart.Value = DateTime.Now;
+            dateTimeEnd.Value = DateTime.Now;
+            lblSum.Text = "Sum";
+            lblDayOfWeekResult.Text = "";
+            DisableFeeInput();
+        }
+
+        private void btnSum_Click(object sender, EventArgs e)
+        {
+            lblSum.Text = Convert.ToString(pg.TotalCharges());
+            EnableFeeInput();
+        }
+
+        private void lstDayOfWeek_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        lblDayOfWeekResult.Text = Convert.ToString(pg.DayOfWeekCharges(lstDayOfWeek.SelectedIndex));
+        }
+
+        private void btnSetFees_Click(object sender, EventArgs e)
+        {
+            pg.SetMinFee = Convert.ToDouble(txtSetMin.Text);
+            pg.SetMaxFee = Convert.ToDouble(txtSetMax.Text);
+            pg.SetAddHrsFee = Convert.ToDouble(txtSetAddit.Text);
+            DisableFeeInput();
+        }
