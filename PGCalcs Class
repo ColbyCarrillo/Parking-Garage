@@ -1,0 +1,180 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ParkingGarageDeux2
+{
+    class PGCalcs
+    {
+    public PGCalcs()                                                           // New constructors default as specified by teacheer
+        {
+            this.SetMinFee = 2.00;
+            this.SetAddHrsFee = .5;
+            this.SetMaxFee = 10.00;
+        }
+
+        public PGCalcs(double Min, double AdditHours, double Max)             // New constructors with input from user as specified
+        {
+            this.SetMinFee = Min;
+            this.SetAddHrsFee = AdditHours;
+            this.SetMaxFee = Max;
+        }
+
+        private DayoWeek _dow = DayoWeek.Monday;
+
+        private double[] DOW = new double[7];
+
+        private double _minFee;                                               //Variables 
+        private double _addHrsFee;
+        private double _maxCharge;
+
+        private DateTime _startTime = new DateTime(2016,01,01,01,00,00);
+        private DateTime _endTime = new DateTime(2016,01,01,01,01,00);
+
+        private int _hoursParked;
+        private int _addHrs;
+        private double _sumFee;
+        
+         public DateTime StartTime                                            // Properties - Exception Throw for Start/End Time being in the future.
+        {                                                                     
+            get
+            {
+                return _startTime;
+            }  
+            set
+                {
+                    if (value > DateTime.Now)
+                    {
+                        throw new Exception("Start of parking cannot be in the future.");
+                    }
+                    else
+               
+                    _startTime = value;
+                }
+            
+        }                
+        public DateTime EndTime
+        {
+            get
+            {
+                return _endTime;
+            }
+            set
+            {
+                if (value > DateTime.Now)
+                {
+                    throw new Exception("End of parking cannot be in the future.");
+                }
+                else
+                    _endTime = value;
+            }
+            
+        }
+                                                    
+        private int AddHrs                                                     // Properties for Additional Hours and Calculation for Hours Parked
+        {
+            get
+            {
+                return _addHrs;
+            }
+            set
+            {
+                _addHrs = value;
+            }
+        }
+        private int HoursParked
+        {
+            get
+            {
+                return _hoursParked = (EndTime - StartTime).Hours;
+            }
+            set
+            {
+                _hoursParked = value;
+            }
+        }
+
+        public double SetMinFee                                                 // Properties for the constructor to change the values of min, max, additional hours fees
+        {
+            get
+            {
+                return _minFee;
+            }
+            set
+            {
+                _minFee = value;
+            }
+        }
+        public double SetMaxFee
+        {
+            get
+            {
+                return _maxCharge;
+            }
+            set
+            {
+                _maxCharge = value;
+            }
+        }
+        public double SetAddHrsFee
+        {
+            get
+            {
+                return _addHrsFee;
+            }
+            set
+            {
+                _addHrsFee = value;
+            }
+        }
+                public double DayOfWeekCharges(int d)
+        {
+            int y;
+            double ans;
+
+            y = d;
+            ans = DOW[y];
+
+
+            return ans;
+        }
+
+        private double CalcSingleCharge()
+        {
+            double charge;
+
+            charge = _minFee + (_addHrsFee * HoursParked);
+
+            if (charge < SetMinFee)
+                charge = SetMinFee;
+            else
+                if (charge > SetMaxFee)
+                    charge = SetMaxFee;
+
+            return charge;
+        }
+
+        public double AddFee(DateTime userStartTime, DateTime userEndTime)        // Main method that works all of the math for the whole program.
+        {
+            StartTime = userStartTime;
+            EndTime = userEndTime;
+            int x;
+
+            _sumFee = CalcSingleCharge();
+            x = (int) StartTime.DayOfWeek;
+                   
+            DOW[x] =+ _sumFee;
+
+            return _sumFee;
+        }
+
+        public double TotalCharges()
+        {
+            double x;
+            x = DOW.Sum();
+
+            return x;
+        }
+        
